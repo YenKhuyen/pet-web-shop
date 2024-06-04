@@ -1,0 +1,17 @@
+﻿@model IEnumerable<pet_web_shop.Models.EF.tb_category>
+
+@if (Model != null && Model.Any())
+{
+    <div class="mb-5 category-header">
+        <h3 class="text-uppercase border-start border-5 border-primary ps-3 mb-4">Danh mục</h3>
+        <div class="d-flex flex-column justify-content-start">
+            @foreach (var cate in Model)
+            {
+                <a class="h5 bg-light py-2 px-3 mb-2" href="/danh-muc/@cate.id/san-pham">
+                    <i class="bi bi-arrow-right me-2"></i>@cate.title
+                </a>
+            }
+        </div>
+    </div>
+}
+

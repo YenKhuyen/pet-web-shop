@@ -1,0 +1,52 @@
+﻿@model pet_web_shop.Models.ViewModels.HomeViewModels
+
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<body>
+    <div class="d-flex flex-row ">
+        @Html.Action("ListCategories", "Categories")
+        <!-- Hero Start -->
+        <div class="container-fluid bg-primary py-5 mb-3 hero-header">
+            <div class="container py-5">
+                <div class="row justify-content-start">
+                    <div class="col-lg-8 text-center text-lg-start">
+                        <h1 class="display-1 text-uppercase text-dark mb-lg-4">Pet Shop</h1>
+                        <h1 class="text-uppercase text-white mb-lg-4">Make Your Pets Happy</h1>
+                        <p class="fs-4 text-white mb-lg-4">Chuyên cung cấp phụ kiện thú cưng uy tín</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Hero End -->
+    </div>
+
+    <!-- Products Start -->
+    <div class="container-fluid py-5">
+        <div class="px-5">
+            <div class="w-100 border-bottom border-3 border-bottom-primary mb-5"></div>
+        </div>
+        @if (Model.ListCate != null && Model.ListCate.Any())
+        {
+            foreach (var cate in Model.ListCate)
+            {
+                @Html.Partial("_ProductHome", cate)
+            }
+        }
+    </div>
+    <!-- Products End -->
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/Content/vendor/jquery/jquery.min.js"></script>
+    <script src="~/Content/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="~/Content/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,221 @@
+﻿@model pet_web_shop.Models.EF.tb_account
+
+@{
+    ViewBag.Title = "Edit User";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+
+    var roles = new List<SelectListItem>
+{
+new SelectListItem { Text = "User", Value = "1", Selected = true },
+new SelectListItem { Text = "Admin", Value = "2" },
+};
+
+    var roles_owner = new List<SelectListItem>
+{
+new SelectListItem { Text = "Owner", Value = "3"},
+};
+
+    var genders = new List<SelectListItem>
+{
+new SelectListItem { Text = "Male", Value = "1", Selected = true },
+new SelectListItem { Text = "Female", Value ="0" },
+};
+    var avatar = @Model != null && @Model.avatar != null ? "data:image/png;base64," + Convert.ToBase64String(@Model.avatar) : "/Content/img/Default_avt.png";
+
+}
+
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+
+    <!-- Favicon -->
+    <link href="~/Content/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Roboto:wght@700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/Content/lib/flaticon/font/flaticon.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/Content/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="~/Content/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+    <h2>Cập nhật thông tin tài khoản</h2>
+    @using (Html.BeginForm("Edit", "UserManagement", FormMethod.Post, new { }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.id)
+        @Html.Hidden("current_pass", Model.password)
+        if (Model.role == Constants.RoleOwner)
+        {
+            @Html.HiddenFor(x => x.role)
+            @Html.HiddenFor(x => x.status)
+        }
+
+        <div class="form-horizontal">
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.avatar, "", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <img src="@avatar" width="200" height="200" style="cursor: pointer" id="imagePreview" />
+                    <input hidden type="file" accept="image/png, image/gif, image/jpeg" id="inputUploadImage" />
+                    @Html.TextBoxFor(model => model.avatar, new { @class = "form-control", @style = "display: none;", @id = "avatar" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.user_name, "Tên tài khoản", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.user_name, new { @class = "form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.user_name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.password, "Mật khẩu", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.password, new { @class = "form-control", @type = "password" })
+                    @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.role, "Quyền", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.role, Model.role == Constants.RoleOwner ? roles_owner : roles, new { @class = "form-control animated--fade-in" })
+                    @Html.ValidationMessageFor(model => model.role, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.first_name, "Họ", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.first_name, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.first_name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.last_name, "Tên", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.last_name, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.last_name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.gender, "Giới tính", new { @class = "control-label col-md-2" })
+                <div class="col-md-10 flex-row d-flex">
+                    <div class="form-check">
+                        @Html.RadioButtonFor(model => model.gender, 1, new { @class = "form-check-input", @checked = "checked" })
+                        @Html.Label("Nam", new { @class = "form-check-label mr-5", @for = "gender" })
+                    </div>
+                    <div class="form-check">
+                        @Html.RadioButtonFor(model => model.gender, 0, new { @class = "form-check-input" })
+                        @Html.Label("Nữ", new { @class = "form-check-label", @for = "gender" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.address, "Địa chỉ", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.address, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.address, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.date_of_birth, "Ngày sinh", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.date_of_birth, new { @class = "form-control", @type = "date" })
+                    @Html.ValidationMessageFor(model => model.date_of_birth, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.email, "Email", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.email, new { @class = "form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.phone_number, "Số điện thoại", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.phone_number, new { @class = "form-control", @type = "tel", @pattern = "0[0-9]{3}[0-9]{3}[0-9]{3}" })
+                    @Html.ValidationMessageFor(model => model.phone_number, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            @if (Model.role != Constants.RoleOwner)
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.status, "Trạng thái", new { @class = "control-label col-md-2" })
+                    <div class="col-md-10 flex-row d-flex">
+                        <div class="form-check">
+                            @Html.RadioButtonFor(model => model.status, 1, new { @class = "form-check-input", @checked = "checked" })
+                            @Html.Label("Active", new { @class = "form-check-label mr-5", @for = "status" })
+                        </div>
+                        <div class="form-check">
+                            @Html.RadioButtonFor(model => model.status, 0, new { @class = "form-check-input" })
+                            @Html.Label("Inactive", new { @class = "form-check-label", @for = "status" })
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="form-group">
+                <div class="col-md-offset-10 col-md-10 flex-row d-flex justify-content-end align-items-center">
+                    <div>
+                        @Html.ActionLink("Trở lại", "quan-ly-tai-khoan", "admin", new { area = "" }, null)
+                    </div>
+
+                    <button type="submit" value="Create" class="btn btn-primary ml-4">
+                        Lưu thay đổi
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/Content/vendor/jquery/jquery.min.js"></script>
+
+    <script src="~/Content/js/admin/user-management.js"></script>
+    <script>
+    $(document).ready(function() {
+        var dateOfBirth = '@Model.date_of_birth.ToString("yyyy-MM-dd")';
+        $('#date_of_birth').val(dateOfBirth);
+
+        var avt = "@avatar";
+
+        if (avt !== "/Content/img/Default_avt.png") {
+
+            console.log($("#avatar"))
+            setTimeout(() => {
+                $("#avatar").val(avt.split("base64,")[1]);
+            }, [500])
+        } else {
+            $("#avatar").val(null);
+        };
+    });
+    </script>
+
+</body>
+

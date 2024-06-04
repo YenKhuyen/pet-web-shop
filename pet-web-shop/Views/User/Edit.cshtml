@@ -1,0 +1,157 @@
+﻿@model pet_web_shop.Models.EF.tb_account
+@{
+    ViewBag.Title = "Thông tin cá nhân";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+
+    var genders = new List<SelectListItem>
+{
+new SelectListItem { Text = "Male", Value = "1", Selected = true },
+new SelectListItem { Text = "Female", Value ="0" },
+};
+    var avatar = @Model != null && @Model.avatar != null ? "data:image/png;base64," + Convert.ToBase64String(@Model.avatar) : "/Content/img/Default_avt.png";
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<body>
+    <div class="container-fluid py-5">
+        <div class="container">
+            <h6 class="text-primary d-flex align-items-end">
+                <a class="d-flex align-items-end text-uppercase" href="#" id="button-back" onclick="history.back()">
+                    <i class="bi bi-arrow-left"></i>&nbsp;Quay lại
+                </a>
+            </h6>
+
+            @using (Html.BeginForm("Edit", "User", FormMethod.Post, new { }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(x => x.id)
+                @Html.HiddenFor(x => x.role)
+                @Html.HiddenFor(x => x.status)
+                @Html.HiddenFor(x => x.password)
+                @Html.HiddenFor(x => x.email)
+                @Html.Hidden("current_pass", Model.password)
+
+
+                <div class="form-horizontal">
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group mb-3">
+                        <div class="col-md-10">
+                            <img src="@avatar" width="200" height="200" style="cursor: pointer" id="imagePreview" />
+                            <input hidden type="file" accept="image/png, image/gif, image/jpeg" id="inputUploadImage" />
+                            @Html.TextBoxFor(model => model.avatar, new { @class = "form-control", @style = "display: none;", @id = "avatar" })
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(model => model.user_name, "Tên người dùng", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.user_name, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.user_name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(model => model.first_name, "Họ", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.first_name, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.first_name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(model => model.last_name, "Tên", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.last_name, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.last_name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(model => model.gender, "Giới tính", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10 flex-row d-flex">
+                            <div class="form-check">
+                                @Html.RadioButtonFor(model => model.gender, 1, new { @class = "form-check-input", @checked = "checked" })
+                                @Html.Label("Male", new { @class = "form-check-label mr-5", @for = "gender" })
+                            </div>
+                            <div class="form-check" style="margin-left: 10px">
+                                @Html.RadioButtonFor(model => model.gender, 0, new { @class = "form-check-input" })
+                                @Html.Label("Female", new { @class = "form-check-label", @for = "gender" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(model => model.address, "Địa chỉ", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.address, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.address, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(model => model.date_of_birth, "Ngày sinh", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.date_of_birth, new { @class = "form-control", @type = "date" })
+                            @Html.ValidationMessageFor(model => model.date_of_birth, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(model => model.email, "Email", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.email, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(model => model.phone_number, "Số điện thoại", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.phone_number, new { @class = "form-control", @type = "tel", @pattern = "0[0-9]{3}[0-9]{3}[0-9]{3}" })
+                            @Html.ValidationMessageFor(model => model.phone_number, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-10 col-md-10 flex-row d-flex justify-content-end align-items-center">
+                            <a value="chagne-pass" class="btn btn-secondary ml-4" href="/doi-mat-khau">
+                                Đổi mật khẩu
+                            </a>
+                            <button type="submit" value="Create" class="btn btn-primary" style="margin-left: 10px">
+                                Cập nhật thông tin
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+    <script src="~/Content/vendor/jquery/jquery.min.js"></script>
+
+    <script src="~/Content/js/admin/user-management.js"></script>
+    <script>
+    $(document).ready(function() {
+        var dateOfBirth = '@Model.date_of_birth.ToString("yyyy-MM-dd")';
+        $('#date_of_birth').val(dateOfBirth);
+
+        var avt = "@avatar";
+
+        if (avt !== "/Content/img/Default_avt.png") {
+
+            console.log($("#avatar"))
+            setTimeout(() => {
+                $("#avatar").val(avt.split("base64,")[1]);
+            }, [500])
+        } else {
+            $("#avatar").val(null);
+        };
+    });
+    </script>
+</body>
+</html>

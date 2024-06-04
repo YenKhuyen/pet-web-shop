@@ -1,0 +1,159 @@
+﻿@model PagedList.IPagedList<pet_web_shop.Models.EF.tb_order>
+@using PagedList.Mvc;
+@using pet_web_shop.Common
+
+@{
+    ViewBag.Title = "Đơn mua";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+    <div class="container pt-3">
+        <div class="d-flex w-100">
+            @Html.Action("MenuLeft", "Order", new { status = ViewBag.Status })
+
+            @if (Model != null && Model.Any())
+            {
+                <div class="w-100">
+                    @foreach (var order in Model)
+                    {
+                        <div class="col-12 mb-3" id="order-@order.id">
+                            <div class="w-100 d-flex px-4 py-2 bg-light justify-content-between">
+                                <div class="d-flex gap-3">
+                                    <div class="d-flex gap-3">
+                                        <i class="bi bi-bag-check"></i><b class="text-uppercase">Mã đơn hàng:</b>
+                                        <div class="text-danger">
+                                            @order.code
+                                        </div>
+
+                                    </div>
+                                    <div class="d-sm-none">&Iota;</div>
+                                    <div class="text-black-50">
+                                        <i>
+                                            @order.created.ToString("dd/MM/yyyy HH:mm:ss")
+                                        </i>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <i class="bi bi-truck"></i><b>Trạng thái:</b>
+                                    <div class="@OrderCommon.OrderStatusStyle(order.status)" id="order-status-text">
+                                        @OrderCommon.OrderStatus(order.status)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column w-100 px-4 py-2" style="border-left: 2px solid #F3F3F3; border-right: 2px solid #F3F3F3; ">
+                                @if (order.order_detail != null && order.order_detail.Any())
+                                {
+                                    foreach (var detail in order.order_detail)
+                                    {
+                                        <a class="d-flex my-2 pb-4" href="~/chi-tiet-san-pham/@detail.product.id" style="border-bottom: 1px solid #F3F3F3;">
+                                            <div style="width: 80px; height: 80px; margin-right: 10px; display: flex; justify-content: center; align-items: center;">
+                                                <img src="@OrderCommon.Image(detail.product)" width="80" height="80" />
+                                            </div>
+                                            <div class="d-flex flex-column justify-content-between w-100">
+                                                <div class="overflow-hidden text-two-line">
+                                                    <b>
+                                                        @detail.product.title
+                                                    </b>
+                                                </div>
+                                                <div class="w-100 d-flex justify-content-between" style="color: #9c9c9c !important;">
+                                                    <div>x @detail.quantity</div>
+                                                    <div class="d-flex">
+                                                        @if (detail.product.isSale && detail.product.sale > 0)
+                                                        {
+                                                            <div class="text-black-50 text-decoration-line-through d-flex justify-content-end align-items-center" style="font-size: 12px; margin-right: 10px">
+                                                                @FormatNumber.Format(@detail.product.price) VND
+                                                            </div>
+                                                        }
+                                                        <div class="text-danger">
+                                                            @FormatNumber.Format(OrderCommon.GetPriceProduct(detail.product)) VND
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    }
+                                }
+                            </div>
+                            <div class="d-flex flex-column p-4" style="background-color: #e6f6e5">
+                                <div class="w-100 d-flex justify-content-end mb-3 align-items-center">
+                                    <i class="bi bi-cash" style="font-size: 20px;"></i>&nbsp; Thành tiền:
+                                    <b class="text-success" style="margin-left: 10px;">@FormatNumber.Format(order.total_price) VND</b>
+                                </div>
+                                <div id="order-info">
+                                    @if (order.status == Constants.Ordered)
+                                    {
+                                        <div class="w-100 d-flex justify-content-end">
+                                            <button class="btn btn-outline-danger" style="width: fit-content;" data-id="@order.id" id="button-cancel-order">Huỷ đơn hàng</button>
+                                        </div>
+                                    }
+                                    @if (order.status == Constants.Shipping)
+                                    {
+                                        <div class="w-100 d-flex justify-content-end text-danger">
+                                            <i><i class="bi bi-info-circle"></i>&nbsp;Vui lòng thanh toán khi nhận hàng!</i>
+                                        </div>
+                                    }
+                                    @if (order.status == Constants.Delivered)
+                                    {
+                                        <div class="w-100 d-flex justify-content-end text-success">
+                                            <i><i class="bi bi-info-circle"></i>&nbsp;Đơn hàng đã giao thành công! Cám ơn quý khách!</i>
+                                        </div>
+                                    }
+                                    @if (order.status == Constants.Cancelled)
+                                    {
+                                        <div class="w-100 d-flex justify-content-end text-danger">
+                                            <i><i class="bi bi-info-circle"></i>&nbsp;Đơn hàng đã được huỷ thành công!</i>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="my-3 row">
+                        <div class="col-sm-12 col-md-5">
+                            <div class="dataTables_info" role="status" aria-live="polite">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</div>
+                        </div>
+                        <div class="col-sm-12 col-md-7">
+                            <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
+
+                                @Html.PagedListPager(Model, page => Url.Action("Index",
+                                     new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }),
+                                     new PagedListRenderOptions
+                                     {
+                                         LinkToPreviousPageFormat = "Previous",
+                                         LinkToNextPageFormat = "Next",
+                                         MaximumPageNumbersToDisplay = 5,
+                                         ClassToApplyToFirstListItemInPager = "previous",
+                                         ClassToApplyToLastListItemInPager = "next",
+                                         LiElementClasses = new string[] { "paginate_button", "page-item" },
+                                     })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-center align-items-center" style="min-height: 300px;">
+                        <h2>Không có đơn hàng nào!</h2>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/Content/vendor/jquery/jquery.min.js"></script>
+    <script src="~/Content/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="~/Content/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <script src="~/Content/js/client/orders.js"></script>
+</body>
+</html>

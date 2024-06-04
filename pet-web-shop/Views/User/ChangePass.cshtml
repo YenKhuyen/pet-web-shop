@@ -1,0 +1,67 @@
+﻿@model pet_web_shop.Models.ViewModels.ChangePassViewModels
+
+@{
+    ViewBag.Title = "ChangePass";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+    <div class="container pt-3 mb-4">
+        <div class="container">
+            <h6 class="text-primary d-flex align-items-end">
+                <a class="d-flex align-items-end text-uppercase" href="#" id="button-back" onclick="history.back()">
+                    <i class="bi bi-arrow-left"></i>&nbsp;Quay lại
+                </a>
+            </h6>
+
+            @using (Html.BeginForm("ChangePass", "User", FormMethod.Post, new { }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(x => x.id)
+
+                <div class="form-horizontal">
+
+                    <h2>Thay đổi mật khẩu</h2>
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(model => model.password, "Mật khẩu hiện tại", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.password, new { @class = "form-control", @type = "password" })
+                            @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(model => model.new_password, "Mật khẩu mới", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.new_password, new { @class = "form-control", @type = "password" })
+                            @Html.ValidationMessageFor(model => model.new_password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(model => model.re_new_password, "Xác nhận mật khẩu", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.re_new_password, new { @class = "form-control", @type = "password" })
+                            @Html.ValidationMessageFor(model => model.re_new_password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-10 col-md-10 flex-row d-flex justify-content-end align-items-center">
+                            <button type="submit" value="Create" class="btn btn-primary" style="margin-left: 10px">
+                                Cập nhật mật khẩu
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>

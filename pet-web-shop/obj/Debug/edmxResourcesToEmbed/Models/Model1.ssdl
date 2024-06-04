@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="tb_account">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="user_id" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="user_name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="password" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="role" Type="numeric" Precision="1" Scale="0" Nullable="false" />
+    <Property Name="status" Type="numeric" Precision="1" Scale="0" Nullable="false" />
+    <Property Name="created" Type="datetime" Nullable="false" />
+    <Property Name="modified" Type="datetime" />
+  </EntityType>
+  <EntityType Name="tb_cart">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="product_id" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="account_id" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="category_id" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="order_quantity" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="total_price" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="status" Type="numeric" Precision="1" Scale="0" Nullable="false" />
+    <Property Name="created" Type="datetime" Nullable="false" />
+    <Property Name="modified" Type="datetime" />
+  </EntityType>
+  <EntityType Name="tb_category">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="description" Type="nvarchar(max)" />
+    <Property Name="created" Type="datetime" Nullable="false" />
+    <Property Name="modified" Type="datetime" />
+  </EntityType>
+  <EntityType Name="tb_image_product">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="type" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="product_id" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="image" Type="image" Nullable="false" />
+    <Property Name="created" Type="datetime" Nullable="false" />
+    <Property Name="modified" Type="datetime" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'pet-shop.dbo.tb_product' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="tb_product">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="title" />
+      <PropertyRef Name="category_id" />
+      <PropertyRef Name="description" />
+      <PropertyRef Name="price" />
+      <PropertyRef Name="sale" />
+      <PropertyRef Name="sold_count" />
+      <PropertyRef Name="quantity" />
+      <PropertyRef Name="created" />
+    </Key>
+    <Property Name="id" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="category_id" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="description" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="price" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="sale" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="sold_count" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="quantity" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="status" Type="numeric" Precision="1" Scale="0" />
+    <Property Name="detail" Type="nvarchar(max)" />
+    <Property Name="created" Type="datetime" Nullable="false" />
+    <Property Name="modified" Type="datetime" />
+  </EntityType>
+  <EntityType Name="tb_review">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="product_id" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="rate" Type="numeric" Precision="1" Scale="0" Nullable="false" />
+    <Property Name="user_id" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="created" Type="datetime" Nullable="false" />
+    <Property Name="modified" Type="datetime" />
+  </EntityType>
+  <EntityType Name="tb_user">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="first_name" Type="nvarchar" MaxLength="225" Nullable="false" />
+    <Property Name="last_name" Type="nvarchar" MaxLength="225" Nullable="false" />
+    <Property Name="address" Type="nvarchar" MaxLength="225" />
+    <Property Name="date_of_birth" Type="datetime" Nullable="false" />
+    <Property Name="email" Type="varchar" MaxLength="100" />
+    <Property Name="avatar" Type="image" />
+    <Property Name="phone_number" Type="varchar" MaxLength="50" />
+    <Property Name="gender" Type="numeric" Precision="18" Scale="0" />
+    <Property Name="created" Type="datetime" Nullable="false" />
+    <Property Name="modified" Type="datetime" />
+  </EntityType>
+  <EntityContainer Name="ModelStoreContainer">
+    <EntitySet Name="tb_account" EntityType="Self.tb_account" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tb_cart" EntityType="Self.tb_cart" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tb_category" EntityType="Self.tb_category" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tb_image_product" EntityType="Self.tb_image_product" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tb_review" EntityType="Self.tb_review" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tb_user" EntityType="Self.tb_user" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tb_product" EntityType="Self.tb_product" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [tb_product].[id] AS [id], 
+    [tb_product].[title] AS [title], 
+    [tb_product].[category_id] AS [category_id], 
+    [tb_product].[description] AS [description], 
+    [tb_product].[price] AS [price], 
+    [tb_product].[sale] AS [sale], 
+    [tb_product].[sold_count] AS [sold_count], 
+    [tb_product].[quantity] AS [quantity], 
+    [tb_product].[status] AS [status], 
+    [tb_product].[detail] AS [detail], 
+    [tb_product].[created] AS [created], 
+    [tb_product].[modified] AS [modified]
+    FROM [dbo].[tb_product] AS [tb_product]</DefiningQuery>
+    </EntitySet>
+  </EntityContainer>
+</Schema>

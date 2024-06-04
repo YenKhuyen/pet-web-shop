@@ -1,0 +1,195 @@
+﻿@model pet_web_shop.Models.ViewModels.ProductDetailViewModels
+@using System.Globalization
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+    var detail = Model.ProductDetail;
+    var list_cate = Model.CategoryList;
+    var top_sold = Model.TopSaleProduct;
+}
+
+<head>
+    <meta charset="utf-8">
+
+    <link href="~/Content/css/client/product-detail.css" rel="stylesheet" />
+
+    <!-- Template Stylesheet -->
+    <link href="~/Content/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row g-5">
+            <h6 class="text-primary d-flex align-items-end  mt-4 mb-3 pb-3 border-bottom border-1 border-primary">
+                <a class="d-flex align-items-end text-uppercase" href="#" id="button-back" onclick="history.back()">
+                    <i class="bi bi-arrow-left"></i>&nbsp;Quay lại
+                </a>
+            </h6>
+            @{
+                var m_list_images = detail.images_product?.OrderByDescending(x => x.isDefault == true)?.ThenBy(x => !x.isDefault);
+                var m_image = m_list_images.Count() > 0 ? m_list_images.Where(x => x.isDefault).Count() != 0 ? m_list_images.Where(x => x.isDefault).First().image : m_list_images.FirstOrDefault().image : "/Content/img/default-product_450.png";
+                CultureInfo m_cul = CultureInfo.GetCultureInfo("vi-VN");
+                var m_price = detail.isSale ? detail.price - detail.price * detail.sale / 100 : detail.price;
+                string m_price_string = double.Parse(m_price.ToString()).ToString("#,###", m_cul.NumberFormat);
+                string m_original_price = double.Parse(detail.price.ToString()).ToString("#,###", m_cul.NumberFormat);
+                var m_status = (detail.isSale && detail.sale > 0) ? "-" + detail.sale + "%" : null;
+            }
+            <div class="col-lg-12 row">
+                <div class="col-lg-7">
+                    <!-- Image Start -->
+                    @if (m_image != null && m_image.Any())
+                    {
+                        <div class="single-product-pics">
+                            <div class="row">
+                                <div class="col-lg-3 thumbnails_col order-lg-l order-2">
+                                    <div class="product-slider-container">
+                                        <div class="side_view">
+
+                                            @foreach (var product_img in m_list_images)
+                                            {
+                                                if (product_img.image == m_image)
+                                                {
+                                                    <div class="side_view_container active">
+                                                        <img src="@product_img.image" alt="@product_img.image" class="img-fluid rounded bg-light" data-image="@product_img.image" id="slide-image-view">
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="side_view_container">
+                                                        <img src="@product_img.image" alt="@product_img.image" class="img-fluid rounded bg-light" data-image="@product_img.image">
+                                                    </div>
+                                                }
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-9 image-col order-lg-2 order-1">
+                                    <div class="main_view">
+                                        <img src="@m_image" alt="@m_image" class="img-fluid rounded" id="main-image-view">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <!-- Image End -->
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="product_detail">
+                        <div class="product_detail_title">
+                            <h2 class="">@detail.title</h2>
+                            <p class="text-black-50">@detail.detail</p>
+                        </div>
+                        @if (detail.isSale && detail.sale > 0)
+                        {
+                            <div class="d-flex mb-2">
+                                <div class="original_price text-black-50 text-decoration-line-through" style="margin-right: 10px">
+                                    @m_original_price VND
+                                </div>
+                                <div class="bg-primary text-white d-flex justify-content-center align-items-center" style="width: 50px; border-radius: 3px">
+                                    @m_status
+                                </div>
+                            </div>
+                            <div class="sale_price text-primary h3 mb-1">@m_price_string VND</div>
+                        }
+                        else
+                        {
+                            <div class="sale_price text-primary h3 mb-1">@m_price_string VND</div>
+                        }
+
+                        <div class="text-black-50 fst-italic mb-1" id="quantity_current" data-quantity="@detail.quantity">Số lượng: @detail.quantity</div>
+                        <div class="text-black-50 fst-italic mb-4" id="quantity_current">Đã bán: @detail.sold_count</div>
+
+                        <div class="row">
+                            @if (detail.quantity != null && detail.quantity > 0)
+                            {
+                                <div class="col-lg-6 mb-3">
+                                    <div class="quantity_selector" style="user-select: none;">
+                                        <div class="minus" id="minus-quantity-product"><i class="bi bi-dash"></i></div>
+                                        <input class="quantity_value" id="quantity_value" value="1" type="number" placeholder="1" />
+                                        <div class="plus" id="add-quantity-product"><i class="bi bi-plus"></i></div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 mb-3 btn-add-to-card" id="button-add-to-cart" data-id="@detail.id" data-quantity="1"><a class="btn btn-danger text-uppercase w-100 h-100">Thêm vào giỏ</a></div>
+                            }
+                            else
+                            {
+                                <div class="col-lg-6 mb-3"><a class="btn btn-danger text-uppercase w-100 h-100 disabled">Hết hàng</a></div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                @Html.Raw(detail.description)
+            </div>
+
+            <!-- Sidebar Start -->
+            <div class="col-lg-4">
+                <!-- Category Start -->
+                <div class="mb-5">
+                    <h3 class="text-uppercase border-start border-5 border-primary ps-3 mb-4">Danh Mục</h3>
+                    <div class="d-flex flex-wrap m-n1" style="max-height: 400px; overflow-y: auto">
+                        @if (list_cate != null && list_cate.Any())
+                        {
+                            foreach (var cate in list_cate)
+                            {
+                                <a href="/danh-muc/@cate.id/san-pham" class="btn btn-primary m-1">@cate.title</a>
+                            }
+                        }
+                        else
+                        {
+                            <a class="h5 bg-light py-2 px-3 mb-2 w-100" href="/">Không có dữ liệu!</a>
+                        }
+                    </div>
+                </div>
+                <!-- Category End -->
+                <!-- Top Sale Start -->
+                <div class="mb-5">
+                    <h3 class="text-uppercase border-start border-5 border-primary ps-3 mb-4">Top bán chạy</h3>
+                    @if (top_sold != null && top_sold.Any())
+                    {
+                        foreach (var product in top_sold)
+                        {
+
+                            var list_images = product.images_product.OrderBy(x => x.created);
+                            var image = list_images.Count() > 0 ? list_images.Where(x => x.isDefault).Count() != 0 ? list_images.Where(x => x.isDefault).First().image : list_images.FirstOrDefault().image : "/Content/img/default-product_450.png";
+                            CultureInfo cul = CultureInfo.GetCultureInfo("vi-VN");
+                            var price = product.isSale ? product.price - product.price * product.sale / 100 : product.price;
+                            string price_string = double.Parse(price.ToString()).ToString("#,###", cul.NumberFormat);
+                            var status = (product.isSale && product.sale > 0) ? "-" + product.sale + "%" : product.isHot ? "Hot" : product.isNew ? "New" : null;
+
+                            <div class="d-flex overflow-hidden mb-3">
+                                <img class="img-fluid" src="@image" style="width: 100px; height: 100px; object-fit: cover;" alt="san-pham-@product.title">
+                                <a href="/chi-tiet-san-pham/@product.id" class="d-flex flex-column">
+                                    <div class="h5 bg-light px-3 py-3 mb-0 text-uppercase" style="width: 239px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; height: 50px;">
+                                        @product.title
+                                    </div>
+                                    <div class="h5 bg-light px-3 py-2 mb-0 text-primary" style="width: 239px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; height: 50px;">
+                                        @price_string VND
+                                    </div>
+
+                                </a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <a class="h5 bg-light py-2 px-3 mb-2" href="/">Không có dữ liệu!</a>
+                    }
+                </div>
+                <!-- Top Sale End -->
+
+            </div>
+            <!-- Sidebar End -->
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/Content/vendor/jquery/jquery.min.js"></script>
+    <script src="~/Content/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="~/Content/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script type="text/javascript" src="~/Content/js/client/detail-product.js"></script>
+</body>

@@ -1,0 +1,143 @@
+﻿@model PagedList.IPagedList<pet_web_shop.Models.EF.tb_order>
+@using PagedList.Mvc;
+@using pet_web_shop.Common;
+
+@{
+    ViewBag.Title = "Order Management";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Favicon -->
+    <link href="~/Content/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Roboto:wght@700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/Content/lib/flaticon/font/flaticon.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/Content/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <link href="~/Content/css/style.css" rel="stylesheet">
+
+    <link href="~/Content/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+
+<body>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h4 class="m-0 font-weight-bold text-primary">Quản lý đơn hàng</h4>
+            @*<a class="btn btn-primary text-white" href="/admin/tao-danh-muc">Add category</a>*@
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                    <div class="row">
+
+                        <div class="col-sm-12 col-md-12">
+                            @using (Html.BeginForm("Index", "OrderManagement", FormMethod.Get))
+                            {
+                                <div id="dataTable_filter" class="dataTables_filter">
+                                    <label>
+                                        @Html.TextBox("search", ViewBag.CurrentFilter as string, new { @class = "form-control form-control-sm", @type = "search", @placeholder = "Tìm kiếm mã đơn" })
+
+                                        <input type="submit" value="Tìm kiếm" class="btn btn-sm btn-outline-primary" />
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </div><div class="row">
+                        <div class="col-sm-12">
+
+                            <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+                                <thead>
+                                    <tr role="row">
+                                        <th rowspan="1" colspan="1" style="width: 5%;">No.</th>
+                                        <th rowspan="1" colspan="1">Mã</th>
+                                        <th rowspan="1" colspan="1">Tên người nhận</th>
+                                        <th rowspan="1" colspan="1">Người tạo</th>
+                                        <th rowspan="1" colspan="1">Trạng thái</th>
+                                        <th rowspan="1" colspan="1">Tổng tiền</th>
+                                        <th rowspan="1" colspan="1"></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @if (Model != null && Model.Any())
+                                    {
+                                        var i = 1;
+                                        foreach (var order in Model)
+                                        {
+                                            <tr id="order_@order.id">
+                                                <td>@i</td>
+                                                <td>@order.code</td>
+                                                <td>@order.customer_name</td>
+                                                <td>@order.user.first_name @order.user.last_name</td>
+                                                <td class="@OrderCommon.OrderStatusStyle(order.status)">@OrderCommon.OrderStatus(order.status)</td>
+                                                <td>@FormatNumber.Format(order.order_detail.Sum(x => x.price)) VND</td>
+                                                <td>
+                                                    <a class="btn btn-sm btn-outline-primary" href="~/admin/quan-ly-don-hang/@order.id">Detail</a>
+                                                </td>
+                                            </tr>
+                                            i++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr class="even">
+                                            <td colspan="7">Không có bản ghi!</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-5">
+                            <div class="dataTables_info" role="status" aria-live="polite">Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) của @Model.PageCount</div>
+                        </div>
+                        <div class="col-sm-12 col-md-7">
+                            <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
+
+                                @Html.PagedListPager(Model, page => Url.Action("Index",
+                                     new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }),
+                                     new PagedListRenderOptions
+                                     {
+                                         LinkToPreviousPageFormat = "Previous",
+                                         LinkToNextPageFormat = "Next",
+                                         MaximumPageNumbersToDisplay = 5,
+                                         ClassToApplyToFirstListItemInPager = "previous",
+                                         ClassToApplyToLastListItemInPager = "next",
+                                         LiElementClasses = new string[] { "paginate_button", "page-item" },
+                                     })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/Content/vendor/jquery/jquery.min.js"></script>
+
+    <script type="text/javascript" src="~/Content/js/admin/category-management.js"></script>
+    <script type="text/javascript" src="~/Content/js/admin/common.js"></script>
+</body>
+</html>

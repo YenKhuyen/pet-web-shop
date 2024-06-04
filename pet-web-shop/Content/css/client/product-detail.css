@@ -1,0 +1,117 @@
+﻿.container {
+    margin: 0 auto;
+    width: 90%;
+}
+
+.main_view {
+    width: 100%;
+    height: 25rem;
+    border: 1px solid;
+    border-color: #F3F3F3;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .main_view img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+.side_view_container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0.5rem;
+    width: 9rem;
+    height: 7rem;
+}
+
+    .side_view_container.active {
+        border: 1px solid;
+        border-color: #7AB730;
+        border-radius: 3px;
+    }
+
+.side_view {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    height: 25rem;
+    align-content: flex-start;
+}
+
+    .side_view img {
+        border-radius: 3px;
+        object-fit: cover;
+        cursor: pointer;
+        object-fit: contain;
+        height: calc(7rem - 4px);
+    }
+
+::-webkit-scrollbar {
+    width: 1px;
+}
+
+.product_detail {
+    padding: 2rem;
+}
+
+.quantity_selector {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    border: 1px solid #808080;
+    border-radius: 3px;
+}
+
+    .quantity_selector .minus, .quantity_selector .plus {
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        justify-items: center;
+        width: 45%;
+        cursor: pointer;
+        border-radius: 3px;
+    }
+
+        .quantity_selector .minus:hover, .quantity_selector .plus:hover {
+            background: #F3F3F3;
+        }
+
+
+        .quantity_selector .minus i,
+        .quantity_selector .plus i,
+        .quantity_selector .quantity_value {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+    .quantity_selector .quantity_value {
+        width: 100%;
+        border: none;
+        text-align: center;
+    }
+
+    .quantity_selector .quantity_value:focus {
+        border: none;
+    }
+
+        .quantity_selector .quantity_value::-webkit-outer-spin-button,
+        .quantity_selector .quantity_value::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+.btn-add-to-card {
+    height: 40px;
+}
+
+    .btn-add-to-card a {
+        border-radius: 3px;
+    }

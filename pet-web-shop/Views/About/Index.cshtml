@@ -1,0 +1,24 @@
+﻿@model pet_web_shop.Models.EF.tb_about
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+    <div class="container pt-3">
+        @if (Model != null)
+        {
+            <div class="w-100 d-flex flex-column justify-content-center align-items-center">
+                <b>@Html.Raw(Model.contents)</b>
+            </div>
+        }
+        else
+        {
+            <div class="w-100" style="height: 500px"><b>Trang giới thiệu đang dược cập nhật!</b></div>
+        }
+    </div>
+</body>
+</html>

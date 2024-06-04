@@ -1,0 +1,147 @@
+﻿@model pet_web_shop.Models.EF.tb_account
+
+@{
+    ViewBag.Title = "Create User";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+
+    var roles = new List<SelectListItem>
+{
+new SelectListItem { Text = "User", Value = "1", Selected = true },
+new SelectListItem { Text = "Admin", Value = "2" },
+new SelectListItem { Text = "Owner", Value = "3", Disabled = true},
+};
+
+    var genders = new List<SelectListItem>
+{
+new SelectListItem { Text = "Male", Value = "1", Selected = true },
+new SelectListItem { Text = "Female", Value ="0" },
+};
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div class="container pt-3 mb-4">
+        <div class="container">
+            <h6 class="text-primary d-flex align-items-end">
+                <a class="d-flex align-items-end text-uppercase" href="#" id="button-back" onclick="history.back()">
+                    <i class="bi bi-arrow-left"></i>&nbsp;Quay lại
+                </a>
+            </h6>
+            <h2>Đăng ký tài khoản</h2>
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group" style="margin-bottom: 10px">
+                        @Html.LabelFor(model => model.avatar, "Ảnh đại diện", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <img src="~/Content/img/Default_avt.png" width="200" height="200" style="cursor: pointer" id="imagePreview" />
+                            <input hidden type="file" accept="image/png, image/gif, image/jpeg" id="inputUploadImage" />
+                            @Html.TextBoxFor(model => model.avatar, new { @class = "form-control", @style = "display: none;", @id = "avatar" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 10px">
+                        @Html.LabelFor(model => model.user_name, "Tên người dùng", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.user_name, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.user_name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 10px">
+                        @Html.LabelFor(model => model.password, "Mật khẩu", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.password, new { @class = "form-control", @type = "password" })
+                            @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 10px">
+                        @Html.LabelFor(model => model.first_name, "Họ", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.first_name, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.first_name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 10px">
+                        @Html.LabelFor(model => model.last_name, "Tên", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.last_name, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.last_name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 10px">
+                        @Html.LabelFor(model => model.gender, "Giới tính", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10 flex-row d-flex gap-4">
+                            <div class="form-check">
+                                @Html.RadioButtonFor(model => model.gender, 1, new { @class = "form-check-input", @checked = "checked" })
+                                @Html.Label("Nam", new { @class = "form-check-label mr-5", @for = "gender" })
+                            </div>
+                            <div class="form-check">
+                                @Html.RadioButtonFor(model => model.gender, 0, new { @class = "form-check-input" })
+                                @Html.Label("Nữ", new { @class = "form-check-label", @for = "gender" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 10px">
+                        @Html.LabelFor(model => model.address, "Địa chỉ", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.address, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.address, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 10px">
+                        @Html.LabelFor(model => model.date_of_birth, "Ngày sinh", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.date_of_birth, new { @class = "form-control", @type = "date" })
+                            @Html.ValidationMessageFor(model => model.date_of_birth, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 10px">
+                        @Html.LabelFor(model => model.email, "Email", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.email, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 10px">
+                        @Html.LabelFor(model => model.phone_number, "Số điện thoại", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.phone_number, new { @class = "form-control", @type = "tel", @pattern = "0[0-9]{3}[0-9]{3}[0-9]{3}" })
+                            @Html.ValidationMessageFor(model => model.phone_number, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 10px">
+                        <div class="col-md-offset-10 col-md-10 flex-row d-flex justify-content-end align-items-center gap-3">
+                            <div>
+                                @Html.ActionLink("Trở lại", "quan-ly-tai-khoan", "admin", new { area = "" }, null)
+                            </div>
+
+                            <button type="submit" value="Create" class="btn btn-primary ml-4">
+                                Đăng ký tài khoản
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/Content/vendor/jquery/jquery.min.js"></script>
+
+    <script type="text/javascript" src="~/Content/js/admin/user-management.js"></script>
+</body>
+</html>

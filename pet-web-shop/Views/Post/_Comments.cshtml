@@ -1,0 +1,87 @@
+﻿@model pet_web_shop.Models.ViewModels.CommentsViewModels
+@using PagedList.Mvc;
+
+@{
+    var list = Model.ListCommnet;
+    var id = Model.id;
+}
+
+<!-- Comment Start -->
+<div class="mb-5" id="comment-container">
+    <h3 class="text-uppercase border-start border-5 border-primary ps-3 mb-4">@list.Count() Comments</h3>
+    @if (list != null && list.Any())
+    {
+        foreach (var comment in list)
+        {
+            var avatar = comment.account != null && comment.account.avatar != null ? "data:image/png;base64," + Convert.ToBase64String(comment.account.avatar) : "/Content/img/Default_avt.png";
+            var user_name = comment.account != null ? comment.account.first_name + " " + comment.account.last_name : "Unknow User";
+            <div class="d-flex mb-4 comment">
+                <img src="@avatar" class="img-fluid" style="width: 45px; height: 45px;">
+                <div class="ps-3">
+                    <h6><a href="">@user_name</a> <small><i>@comment.created.ToString("dd MMM yyyy - HH:mm")</i></small></h6>
+                    <p class="text-five-line comment-text">
+                        @comment.comment
+                    </p>
+                    <a class="expand-button" style="cursor: pointer;">Đọc thêm...</a>
+                </div>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-sm-12 col-md-5">
+                <div class="dataTables_info" role="status" aria-live="polite">Page @(list.PageCount < list.PageNumber ? 0 : list.PageNumber) of @list.PageCount</div>
+            </div>
+            <div class="col-sm-12 col-md-7">
+                <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
+
+                    @Html.PagedListPager(list, page => Url.Action("Details",
+                         new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }),
+                         new PagedListRenderOptions
+                         {
+                             LinkToPreviousPageFormat = "Previous",
+                             LinkToNextPageFormat = "Next",
+                             MaximumPageNumbersToDisplay = 5,
+                             ClassToApplyToFirstListItemInPager = "previous",
+                             ClassToApplyToLastListItemInPager = "next",
+                             LiElementClasses = new string[] { "paginate_button", "page-item" },
+                         })
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex mb-4">
+            <i>Chưa có comment nào!</i>
+        </div>
+    }
+</div>
+@using (Html.BeginForm("Create", "Comment", FormMethod.Post, new { }))
+{
+    @Html.AntiForgeryToken()
+    @Html.Hidden("post_id", id)
+    <div class="bg-light rounded p-5">
+        <h3 class="text-uppercase border-start border-5 border-primary ps-3 mb-4">Leave a comment</h3>
+        <form>
+            <div class="row g-3">
+                <div class="col-12">
+                    @Html.TextArea("comment", new { @class = "form-control bg-white border-0", @rows = "5", @placeholder = "Comment" })
+                </div>
+                <div class="col-12">
+                    <button class="btn btn-primary w-100 py-3" type="submit">Leave Your Comment</button>
+                </div>
+            </div>
+        </form>
+    </div>
+}
+
+<!-- Bootstrap core JavaScript-->
+<script src="~/Content/vendor/jquery/jquery.min.js"></script>
+<script src="~/Content/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="~/Content/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<script src="~/Content/js/admin/common.js"></script>
+<script src="~/Content/js/client/comment.js"></script>
+<!-- Comment End -->

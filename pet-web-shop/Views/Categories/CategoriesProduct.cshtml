@@ -1,0 +1,30 @@
+﻿@model pet_web_shop.Models.ViewModels.CategoriesViewModels
+@{
+    ViewBag.Title = "Product by category";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+    var cate_detail = Model.Category;
+    var list_product = Model.ListProduct;
+}
+
+<!DOCTYPE html>
+
+<div class="container pt-5">
+    <div class="border-start border-5 border-primary ps-5 mb-5">
+        <h6 class="text-primary text-uppercase">@cate_detail.description</h6>
+        <div class="d-flex justify-content-between">
+            <h1 class="display-5 text-uppercase mb-0">@cate_detail.title</h1>
+            <h6 class="text-primary d-flex align-items-end">
+                <a class="d-flex align-items-end text-uppercase" href="#" id="button-back" onclick="history.back()">
+                    <i class="bi bi-arrow-left"></i>&nbsp;Quay lại
+                </a>
+            </h6>
+        </div>
+    </div>
+    @Html.Partial("_ListProduct", list_product)
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="~/Content/vendor/jquery/jquery.min.js"></script>
+<script src="~/Content/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<script src="~/Content/js/admin/common.js"></script>

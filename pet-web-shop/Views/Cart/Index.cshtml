@@ -1,0 +1,96 @@
+﻿@model IEnumerable<pet_web_shop.Models.EF.tb_cart>
+@using System.Globalization
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+    CultureInfo cul = CultureInfo.GetCultureInfo("vi-VN");
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<body>
+    @if (Model != null && Model.Any())
+    {
+        <div class="p-3">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <table class="table table-condensed dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+                <thead>
+                    <tr role="row">
+                        <th rowspan="1" colspan="1" style="width: 5%;">No.</th>
+                        <th rowspan="1" colspan="1">Ảnh sản phẩm</th>
+                        <th rowspan="1" colspan="1">Tên</th>
+                        <th rowspan="1" colspan="1">Số lượng</th>
+                        <th rowspan="1" colspan="1">Giá</th>
+                        <th rowspan="1" colspan="1"></th>
+                    </tr>
+                </thead>
+
+                <tbody id="body-cart-table">
+                    @{
+                        var i = 1;
+                        foreach (var cart in Model)
+                        {
+                            var image_list = @cart.product.images_product.OrderBy(x => x.created);
+                            var image = image_list.Count() > 0 ? image_list.Where(x => x.isDefault).Count() != 0 ? image_list.Where(x => x.isDefault).First().image : image_list.FirstOrDefault().image : "/Content/img/default-product_450.png";
+                            var price = @cart.price;
+                            string price_string = double.Parse(price.ToString()).ToString("#,###", cul.NumberFormat);
+                            <tr id="cart_@cart.id">
+                                <td>@i</td>
+                                <td><img class="img-fluid mb-4" src="@image" alt="" style="height: 50px; width: 50px; object-fit: contain;"></td>
+                                <td>
+                                    <b>
+                                        <a href="/chi-tiet-san-pham/@cart.product.id">
+                                            @cart.product.title
+                                        </a>
+                                    </b>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input class="form-control" value="@cart.quantity" type="number" id="quantity_@cart.id" min="1" max="@cart.product.quantity" width="200" />
+                                    </div>
+                                </td>
+                                <td>@price_string VND</td>
+                                <td>
+                                    <a class="btn btn-sm btn-outline-primary" href="#" data-id="@cart.id" id="btn-udpate-quantity">Cập nhật</a>
+                                    <a class="btn btn-sm btn-outline-danger" href="#" data-id="@cart.id" id="btn-delete-cart">Xoá</a>
+                                </td>
+                            </tr>
+                            i++;
+                        }
+                    }
+                </tbody>
+            </table>
+
+            <div class="w-100 d-flex flex-column">
+                <div class="d-flex gap-3 justify-content-end">
+                    <div><h4>Tổng tiền:</h4></div>
+                    <div><h4 class="text-danger" id="total-price-cart">@double.Parse(Model.Sum(x => x.price * x.quantity).ToString()).ToString("#,###", cul.NumberFormat) VND</h4></div>
+                </div>
+                <div class="d-flex gap-3 justify-content-end">
+                    @using (Html.BeginForm("RemoveAll", "Cart", FormMethod.Post))
+                    {
+                        <button type="submit" class="btn btn-md btn-danger" href="#" id="btn-delete-cate">Xoá giỏ hàng</button>
+                    }
+                    <a class="btn btn-md btn-success" href="~/dat-hang">Thanh Toán</a>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="w-100 text-center d-flex justify-content-center align-items-center" style="min-height: 200px;">
+            <h2 class="text-black-50">Không có sản phẩm nào trong giỏ hàng!</h2>
+        </div>
+    }
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/Content/vendor/jquery/jquery.min.js"></script>
+    <script src="~/Content/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="~/Content/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <script type="text/javascript" src="~/Content/js/client/cart-detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+﻿@model pet_web_shop.Models.EF.tb_category
+
+@using System.Globalization
+@if (Model.product != null && Model.product.Any() && Model.product.Where(x => x.status == 1).Count() > 0)
+{
+    <div class="container">
+        <div class="border-start border-5 border-primary ps-5 mb-5">
+            <h6 class="text-primary text-uppercase">@Model.description</h6>
+            <div class="d-flex justify-content-between">
+                <h1 class="display-5 text-uppercase mb-0">@Model.title</h1>
+                <h6 class="text-primary d-flex align-items-end">
+                    <a href="/danh-muc/@Model.id/san-pham" class="d-flex align-items-end text-uppercase">
+                        Xem thêm&nbsp;<i class="bi bi-arrow-right"></i>
+                    </a>
+                </h6>
+            </div>
+        </div>
+        <div class="owl-carousel product-carousel">
+            @foreach (var product in Model.product)
+            {
+                var image_list = product.images_product.OrderBy(x => x.created);
+                var image = image_list.Count() > 0 ? image_list.Where(x => x.isDefault).Count() != 0 ? image_list.Where(x => x.isDefault).First().image : image_list.FirstOrDefault().image : "/Content/img/default-product_450.png";
+                CultureInfo cul = CultureInfo.GetCultureInfo("vi-VN");
+                var price = product.isSale ? product.price - product.price * product.sale / 100 : product.price;
+                string price_string = double.Parse(price.ToString()).ToString("#,###", cul.NumberFormat);
+                var status = (product.isSale && product.sale > 0) ? "-" + product.sale + "%" : product.isHot ? "Hot" : product.isNew ? "New" : null;
+
+                <div class="mb-5 position-relative" style="width: 240px; height: 320px">
+                    @if (status != null)
+                    {
+                        <div class="position-absolute bg-primary text-white d-flex justify-content-center align-items-center" style="top: 0px; right: -15px; width: 50px; z-index: 0; border-radius: 3px">
+                            @status
+                        </div>
+                    }
+                    <div class="product-item bg-light d-flex flex-column text-center">
+                        <img class="img-fluid mb-4" src="@image" alt="" style="height: 185px; width: 185px; object-fit: contain;">
+                        <h6 class="text-uppercase">@product.title</h6>
+                        <h5 class="text-primary mb-0">@price_string VND</h5>
+                        <div class="btn-action d-flex justify-content-center">
+                            <button class="btn btn-primary py-2 px-3" data-id="@product.id" data-quantity="1" id="button-add-to-cart"><i class="bi bi-cart"></i></button>
+                            <a class="btn btn-primary py-2 px-3" href="/chi-tiet-san-pham/@product.id"><i class="bi bi-eye"></i></a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

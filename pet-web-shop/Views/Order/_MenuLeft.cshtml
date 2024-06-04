@@ -1,0 +1,32 @@
+﻿@using pet_web_shop.Common;
+@{
+    var order_status = new List<OrderCommon.OrderStatusItem>
+{
+new OrderCommon.OrderStatusItem { Label = "Tất cả", Status = -1, Icon="bi bi-check-all"},
+new OrderCommon.OrderStatusItem { Label = "Đã đặt hàng", Status = Constants.Ordered, Icon="bi bi-bag-check"},
+new OrderCommon.OrderStatusItem { Label = "Đang giao hàng", Status = Constants.Shipping, Icon="bi bi-truck"},
+new OrderCommon.OrderStatusItem { Label = "Thành công", Status =Constants.Delivered, Icon="bi bi-check-circle"},
+new OrderCommon.OrderStatusItem { Label = "Đã huỷ", Status = Constants.Cancelled, Icon="bi bi-x-circle"},
+};
+
+}
+
+<div class="mb-5 category-header">
+    <h4 class="text-uppercase border-start border-5 border-primary ps-3 mb-4">Trạng thái</h4>
+    <div class="d-flex flex-column justify-content-start">
+        <div class="d-flex flex-wrap m-n1" style="max-height: 400px; overflow-y: auto">
+            @foreach (var status in order_status)
+            {
+                var status_search = status.Status != -1 ? "status=" + status.Status : "";
+                if (ViewBag.Status == status.Status || (ViewBag.Status == null && status.Status == -1))
+                {
+                    <a class="h6 bg-light py-2 px-3 mb-2 w-100 active" href="don-mua?@status_search"><i class="@status.Icon"></i>&nbsp;@status.Label</a>
+                }
+                else
+                {
+                    <a class="h6 bg-light py-2 px-3 mb-2 w-100" href="don-mua?@status_search"><i class="@status.Icon"></i>&nbsp;@status.Label</a>
+                }
+            }
+        </div>
+    </div>
+</div>

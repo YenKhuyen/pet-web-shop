@@ -1,0 +1,185 @@
+﻿@model pet_web_shop.Models.EF.tb_order
+@using pet_web_shop.Common;
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+    var order_status = new List<OrderCommon.OrderStatusProgress>
+{
+new OrderCommon.OrderStatusProgress { Label = "Đã đặt hàng", Status = Constants.Ordered},
+new OrderCommon.OrderStatusProgress { Label = "Đang giao hàng", Status = Constants.Shipping},
+new OrderCommon.OrderStatusProgress { Label = "Thành công", Status =Constants.Delivered},
+new OrderCommon.OrderStatusProgress { Label = "Đã huỷ", Status = Constants.Cancelled},
+};
+}
+
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+
+    <!-- Favicon -->
+    <link href="~/Content/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Roboto:wght@700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/Content/lib/flaticon/font/flaticon.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/Content/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="~/Content/css/style.css" rel="stylesheet">
+    <link href="~/Content/css/admin/order-detail.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="form-horizontal">
+        <div class="col-12 mb-3 d-flex justify-content-between">
+            <div class="d-flex mb-3">
+                <i class="mr-3">Tên người nhận:</i>
+                <b>@Model.customer_name</b>
+            </div>
+            <div class="d-flex mb-3">
+                <i class="mr-3">Số điện thoại:</i>
+                <b>@Model.phone </b>
+            </div>
+        </div>
+
+        <div class="col-12 mb-3 d-flex justify-content-between">
+            <div class="d-flex mb-3">
+                <i class="mr-3">Email: </i>
+                <b>@Model.user.email</b>
+            </div>
+        </div>
+
+        <div class="col-12 mb-3 d-flex justify-content-between">
+            <div class="d-flex mb-3">
+                <i class="mr-3">Địa chỉ nhận: </i>
+                <b>@Model.address</b>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="d-flex w-100">
+                <div class="col-12 mb-3" id="order-@Model.id">
+                    <div class="w-100 d-flex px-4 py-2 bg-light justify-content-between">
+                        <div class="d-flex gap-3">
+                            <div class="d-flex gap-3">
+                                <i class="bi bi-bag-check"></i><b class="text-uppercase">Mã đơn hàng:</b>
+                                <div class="text-danger">
+                                    @Model.code
+                                </div>
+
+                            </div>
+                            <div class="d-sm-none">&Iota;</div>
+                            <div class="text-black-50">
+                                <i>
+                                    @Model.created.ToString("dd/MM/yyyy HH:mm:ss")
+                                </i>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <i class="bi bi-truck"></i><b>Trạng thái:</b>
+                            <div class="@OrderCommon.OrderStatusStyle(Model.status)" id="order-status-text">
+                                @OrderCommon.OrderStatus(Model.status)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column w-100 px-4 py-2" style="border-left: 2px solid #F3F3F3; border-right: 2px solid #F3F3F3; ">
+                        @if (Model.order_detail != null && Model.order_detail.Any())
+                        {
+                            foreach (var detail in Model.order_detail)
+                            {
+                                <a class="d-flex my-2 pb-4" href="~/admin/quan-ly-san-pham/@detail.product.id" style="border-bottom: 1px solid #F3F3F3;">
+                                    <div style="width: 80px; height: 80px; margin-right: 10px; display: flex; justify-content: center; align-items: center;">
+                                        <img src="@OrderCommon.Image(detail.product)" width="80" height="80" />
+                                    </div>
+                                    <div class="d-flex flex-column justify-content-between w-100">
+                                        <div class="overflow-hidden text-two-line">
+                                            <b>
+                                                @detail.product.title
+                                            </b>
+                                        </div>
+                                        <div class="w-100 d-flex justify-content-between" style="color: #9c9c9c !important;">
+                                            <div>x @detail.quantity</div>
+                                            <div class="d-flex">
+                                                @if (detail.product.isSale && detail.product.sale > 0)
+                                                {
+                                                    <div class="text-black-50 text-decoration-line-through d-flex justify-content-end align-items-center" style="font-size: 12px; margin-right: 10px">
+                                                        @FormatNumber.Format(@detail.product.price) VND
+                                                    </div>
+                                                }
+                                                <div class="text-danger">
+                                                    @FormatNumber.Format(OrderCommon.GetPriceProduct(detail.product)) VND
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            }
+                        }
+                    </div>
+                    <div class="d-flex flex-column p-4" style="background-color: #e6f6e5">
+                        <div class="w-100 d-flex justify-content-end align-items-center">
+                            <i class="bi bi-cash" style="font-size: 20px;"></i>&nbsp; Thành tiền:
+                            <b class="text-success" style="margin-left: 10px;">@FormatNumber.Format(Model.total_price) VND</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @using (Html.BeginForm("Edit", "OrderManagement", FormMethod.Post, new { }))
+        {
+            @Html.AntiForgeryToken()
+            var i = 1;
+            if (Model != null)
+            {
+                <b class="col-12 mb-3">Cập nhật trạng thái đơn hàng:</b>
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="container">
+                    <div class="tabs">
+
+                        @foreach (var status in order_status)
+                        {
+                            var check = (status.Status == Model.status) ? "checked" : "false";
+
+                            <input type="radio" name="order-status" value="@status.Status" id="status_@i" @check />
+                            <label class="tab" for="status_@i">@status.Label</label>
+                            i++;
+                        }
+
+                        <input type="hidden" id="hiddenInput" name="selectedOption">
+                    </div>
+                </div>
+            }
+
+            @Html.Hidden("id", Model.id)
+            @Html.Hidden("status_value", Model.status, new { @id = "input-status-value" })
+
+            <div class="col-md-offset-12 col-md-12 flex-row d-flex justify-content-end align-items-center">
+                <div>
+                    @Html.ActionLink("Trở lại", "quan-ly-don-hang", "admin", new { area = "" }, null)
+                </div>
+
+                <button type="submit" value="save" class="btn btn-primary ml-4">
+                    Lưu thay đổi
+                </button>
+            </div>
+        }
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/Content/vendor/jquery/jquery.min.js"></script>
+
+    <script src="~/Content/js/admin/order-detail.js"></script>
+</body>

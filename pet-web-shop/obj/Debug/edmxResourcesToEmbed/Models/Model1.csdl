@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="tb_account">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Decimal" Precision="18" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="user_id" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="user_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="role" Type="Decimal" Precision="1" Scale="0" Nullable="false" />
+    <Property Name="status" Type="Decimal" Precision="1" Scale="0" Nullable="false" />
+    <Property Name="created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="modified" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="tb_cart">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Decimal" Precision="18" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="product_id" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="account_id" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="category_id" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="order_quantity" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="total_price" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="status" Type="Decimal" Precision="1" Scale="0" Nullable="false" />
+    <Property Name="created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="modified" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="tb_category">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Decimal" Precision="18" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="modified" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="tb_image_product">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Decimal" Precision="18" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="product_id" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="image" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+    <Property Name="created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="modified" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="tb_review">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Decimal" Precision="18" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="product_id" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="rate" Type="Decimal" Precision="1" Scale="0" Nullable="false" />
+    <Property Name="user_id" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="modified" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="tb_user">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Decimal" Precision="18" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="first_name" Type="String" MaxLength="225" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="last_name" Type="String" MaxLength="225" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="address" Type="String" MaxLength="225" FixedLength="false" Unicode="true" />
+    <Property Name="date_of_birth" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="avatar" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="phone_number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="gender" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="modified" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="tb_product">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="title" />
+      <PropertyRef Name="category_id" />
+      <PropertyRef Name="description" />
+      <PropertyRef Name="price" />
+      <PropertyRef Name="sale" />
+      <PropertyRef Name="sold_count" />
+      <PropertyRef Name="quantity" />
+      <PropertyRef Name="created" />
+    </Key>
+    <Property Name="id" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="category_id" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="price" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="sale" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="sold_count" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="quantity" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="status" Type="Decimal" Precision="1" Scale="0" />
+    <Property Name="detail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="modified" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="tb_account" EntityType="Self.tb_account" />
+    <EntitySet Name="tb_cart" EntityType="Self.tb_cart" />
+    <EntitySet Name="tb_category" EntityType="Self.tb_category" />
+    <EntitySet Name="tb_image_product" EntityType="Self.tb_image_product" />
+    <EntitySet Name="tb_review" EntityType="Self.tb_review" />
+    <EntitySet Name="tb_user" EntityType="Self.tb_user" />
+    <EntitySet Name="tb_product" EntityType="Self.tb_product" />
+  </EntityContainer>
+</Schema>

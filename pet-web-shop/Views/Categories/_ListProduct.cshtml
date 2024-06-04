@@ -1,0 +1,77 @@
+﻿@model PagedList.IPagedList<pet_web_shop.Models.EF.tb_product>
+@using PagedList.Mvc;
+@using System.Globalization
+
+<div class="row mb-4">
+    <div class="col-sm-12 col-md-12">
+        @using (Html.BeginForm("CategoriesProduct", "Categories", FormMethod.Get))
+        {
+            <div id="dataTable_filter" class="dataTables_filter row d-flex justify-content-end">
+                <label class="d-flex col-sm-4">
+                    @Html.TextBox("search", ViewBag.CurrentFilter as string, new { @class = "form-control form-control-sm", @type = "search", @placeholder = "Title search" })
+                    <input type="submit" value="Search" class="btn btn-sm btn-outline-primary" style="margin-left: 10px;" />
+                </label>
+            </div>
+        }
+    </div>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <div class="" style="display: grid; grid-template-columns: repeat(auto-fill, 240px); grid-gap: 3em">
+        @foreach (var product in Model)
+        {
+            var image_list = product.images_product.OrderBy(x => x.created);
+            var image = image_list.Count() > 0 ? image_list.Where(x => x.isDefault).Count() != 0 ? image_list.Where(x => x.isDefault).First().image : image_list.FirstOrDefault().image : "/Content/img/default-product_450.png";
+            CultureInfo cul = CultureInfo.GetCultureInfo("vi-VN");
+            var price = product.isSale ? product.price - product.price * product.sale / 100 : product.price;
+            string price_string = double.Parse(price.ToString()).ToString("#,###", cul.NumberFormat);
+            var status = (product.isSale && product.sale > 0) ? "-" + product.sale + "%" : product.isHot ? "Hot" : product.isNew ? "New" : null;
+
+            <div class="mb-5 position-relative" style="width: 240px; height: 320px">
+                @if (status != null)
+                {
+                    <div class="position-absolute bg-primary text-white d-flex justify-content-center align-items-center" style="top: 0px; right: -15px; width: 50px; z-index: 0; border-radius: 3px">
+                        @status
+                    </div>
+                }
+                <div class="product-item bg-light d-flex flex-column text-center">
+                    <img class="img-fluid mb-4" src="@image" alt="" style="height: 185px; width: 185px; object-fit: contain;">
+                    <h6 class="text-uppercase">@product.title</h6>
+                    <h5 class="text-primary mb-0">@price_string VND</h5>
+                    <div class="btn-action d-flex justify-content-center">
+                        <button class="btn btn-primary py-2 px-3" href="" data-id="@product.id" data-quantity="1" id="button-add-to-cart"><i class="bi bi-cart"></i></button>
+                        <a class="btn btn-primary py-2 px-3" href="/chi-tiet-san-pham/@product.id"><i class="bi bi-eye"></i></a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="w-100 text-center text-black-50">Have no data!</div>
+}
+
+<div class="row my-5 pt-5 border-top border-1 border-primary">
+    <div class="col-sm-12 col-md-5">
+        <div class="dataTables_info" role="status" aria-live="polite">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</div>
+    </div>
+    <div class="col-sm-12 col-md-7">
+        <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
+
+            @Html.PagedListPager(Model, page => Url.Action("index", "categories",
+                 new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }),
+                 new PagedListRenderOptions
+                 {
+                     LinkToPreviousPageFormat = "Previous",
+                     LinkToNextPageFormat = "Next",
+                     MaximumPageNumbersToDisplay = 5,
+                     ClassToApplyToFirstListItemInPager = "previous",
+                     ClassToApplyToLastListItemInPager = "next",
+                     LiElementClasses = new string[] { "paginate_button", "page-item" },
+                 })
+        </div>
+    </div>
+</div>
+

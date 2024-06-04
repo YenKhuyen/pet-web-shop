@@ -1,0 +1,97 @@
+﻿@model pet_web_shop.Models.EF.tb_order
+@using System.Globalization
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+
+    List<pet_web_shop.Models.EF.tb_cart> list_cart = ViewBag.ListCart;
+    string code = ViewBag.Code;
+    int user_id = ViewBag.UserId;
+
+    CultureInfo cul = CultureInfo.GetCultureInfo("vi-VN");
+}
+
+@using (Html.BeginForm("Create", "Order", FormMethod.Post, new { }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.code, new { Value = code })
+    @Html.HiddenFor(model => model.user_id, new { Value = user_id })
+
+    <div class="container pt-5" style="min-height: 50vh;">
+        <div class="row pb-4">
+
+            <div class="col-md-8 d-flex flex-column gap-3">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.customer_name, "Họ tên", htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.TextBoxFor(model => model.customer_name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.customer_name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.phone, "Số điện thoại", new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.TextBoxFor(model => model.phone, new { @class = "form-control", @type = "tel", @pattern = "0[0-9]{3}[0-9]{3}[0-9]{3}" })
+                        @Html.ValidationMessageFor(model => model.phone, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.address, "Địa chỉ nhận hàng", new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.TextBoxFor(model => model.address, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.address, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group mt-2">
+                    <div class="col-md-offset-12 col-md-12 d-flex justify-content-end">
+                        <input type="submit" value="Order" class="btn btn-md btn-primary" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="d-flex w-100 justify-content-between">
+                    <h3>Giỏ hàng</h3>
+                    <h4 class="text-success">@list_cart.Count()</h4>
+                </div>
+                <div class="d-flex justify-content-start align-items-start flex-column" style="border: 1px solid #808080">
+                    <div class="w-100" style="max-height: 360px; overflow-x: hidden; overflow-y: auto;">
+                        @foreach (var cart in list_cart)
+                        {
+                            var image_list = @cart.product.images_product.OrderBy(x => x.created);
+                            var image = image_list.Count() > 0 ? image_list.Where(x => x.isDefault).Count() != 0 ? image_list.Where(x => x.isDefault).First().image : image_list.FirstOrDefault().image : "/Content/img/default-product_450.png";
+                            var price = @cart.price;
+                            string price_string = double.Parse(price.ToString()).ToString("#,###", cul.NumberFormat);
+                            <div class="d-flex col-12 p-2 pb-4" style="width: 100%; border-bottom: 1px solid #bab9b9">
+                                <div style="width: 80px;">
+                                    <img class="img-fluid mb-4" src="@image" alt="" style="height: 80px; width: 80px; object-fit: contain; margin-bottom: 0 !important;">
+                                </div>
+                                <div class="d-flex flex-column justify-content-between" style="width: calc(100% - 80px);">
+                                    <h6>@cart.product.title</h6>
+                                    <div class="d-flex justify-content-between w-100">
+                                        <p class="mb-0">@price_string VND</p>
+                                        <p class="mb-0">x @cart.quantity</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="d-flex col-12 p-2 justify-content-between" style="width: 100%;">
+                        <div>
+                            Tổng tiền
+                        </div>
+                        <b class="text-danger">
+                            @double.Parse(@list_cart.Sum(x => x.price).ToString()).ToString("#,###", cul.NumberFormat) VND
+                        </b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

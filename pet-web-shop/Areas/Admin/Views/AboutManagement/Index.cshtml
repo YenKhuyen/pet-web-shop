@@ -1,0 +1,59 @@
+﻿@model pet_web_shop.Models.EF.tb_about
+@{
+    ViewBag.Title = "Giới thiệu";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Favicon -->
+    <link href="~/Content/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Roboto:wght@700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/Content/lib/flaticon/font/flaticon.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/Content/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <link href="~/Content/css/style.css" rel="stylesheet">
+
+    <link href="~/Content/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h4 class="m-0 font-weight-bold text-primary">Quản lý trang giới thiệu</h4>
+            <a class="btn btn-primary text-white" href="/admin/trang-gioi-thieu">Thiết lập trang giới thiệu</a>
+        </div>
+        <div class="card-body">
+            @if (Model != null)
+            {
+                <div class="w-100 d-flex flex-column justify-content-center align-items-center">
+                    <b>@Html.Raw(Model.contents)</b>
+                </div>
+            }
+            else
+            {
+                <div class="w-100" style="height: 500px"><b>Chưa tạo trang giới thiệu! Vui lòng thiết lập thêm!</b></div>
+            }
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/Content/vendor/jquery/jquery.min.js"></script>
+</body>
+</html>
